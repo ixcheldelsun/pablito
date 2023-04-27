@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 from langchain import ConversationChain
-from langchain.memory import ConversationBufferMemory
+from langchain.memory import ConversationBufferWindowMemory
 from langchain.llms import OpenAI
 
 
@@ -48,8 +48,8 @@ class EventAgent():
     
     def conversation_chat(self, user_input):
         prompt = self.create_prompt(user_input)
-        memory = ConversationBufferMemory()
-        conversation = ConversationChain(llm=llm, 
+        memory = ConversationBufferWindowMemory(prompt=prompt, k=10)
+        conversation = ConversationChain(llm=llm(prompt), 
                                 verbose=False,
                                 memory=memory)
         
