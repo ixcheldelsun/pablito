@@ -30,8 +30,10 @@ from agents.agent import EventAgent
 
 agent = EventAgent()
 # agent.say_hello()
-agent.connect_chatgpt("What is the capital of Romania?")
-
+# agent.connect_chatgpt("What is the capital of Romania?")
+# prompt = agent.create_prompt('What is this about?')
+# print(prompt)
+agent.answer_event_FAQs('When and where do I need to be?')
 # product = 'colorful socks'
 # print(prompt.format(product=product))
 
