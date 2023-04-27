@@ -26,7 +26,7 @@
 # print(llm(prompt))
 
 
-from agents.agent import EventAgent
+from app.agents.agent import EventAgent
 
 agent = EventAgent()
 # agent.say_hello()
