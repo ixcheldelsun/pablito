@@ -1,3 +1,5 @@
+Steps to run the app:
+
 Install dependencies: poetry install
 Get into poetry shell: poetry shell
 Run app locally:  uvicorn app.main:app --reload  
