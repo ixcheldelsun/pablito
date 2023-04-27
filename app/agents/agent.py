@@ -53,7 +53,7 @@ class EventAgent():
                                 verbose=False,
                                 memory=memory)
         
-        return conversation.predict()
+        return conversation.predict(input=user_input)
         
 
 
