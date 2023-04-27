@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, Form
 import uvicorn
 from app.models.chatbot import chatbot
-
+from config import logger
 
 load_dotenv()
 
@@ -14,10 +14,11 @@ def root():
     return {"message": "Hello World"}
 
 
+
 @app.post("/message")
-async def init_bot(From: str = Form(...), Body: str = Form(...) ):
-    response = f"Hello, I am a bot. I am still learning. I got the following message from you: {str(Body)}."
-    return chatbot.send_message(response, From)
+async def bot(From: str = Form(...), Body: str = Form(...)):
+    logger.info(f"Received message from {From}: {Body}")
+    return chatbot.run(Body, From)
 
 
 if __name__ == "__main__":
