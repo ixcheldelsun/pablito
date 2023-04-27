@@ -28,7 +28,7 @@ print(llm(prompt))
 class EventAgent():
     
     def say_hello(self):
-        prompt = "What is a good name for a company that makes colorful socks?"
+        prompt = "Say hello in a random and fun way"
         print(llm(prompt))
 
     def connect_chatgpt(self, user_input):
