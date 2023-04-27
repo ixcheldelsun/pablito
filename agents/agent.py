@@ -28,6 +28,9 @@ print(llm(prompt))
 class EventAgent():
     
     def say_hello(self):
-        llm = OpenAI(temperature=0.9)
         prompt = "What is a good name for a company that makes colorful socks?"
         print(llm(prompt))
+
+    def connect_chatgpt(self, user_input):
+        print(llm(user_input))
+        
