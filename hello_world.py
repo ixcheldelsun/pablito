@@ -29,7 +29,8 @@
 from agents.agent import EventAgent
 
 agent = EventAgent()
-agent.say_hello()
+# agent.say_hello()
+agent.connect_chatgpt("What is the capital of Romania?")
 
 # product = 'colorful socks'
 # print(prompt.format(product=product))
