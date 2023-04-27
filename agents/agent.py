@@ -16,15 +16,6 @@ SERP_API_KEY = os.getenv("SERP_API_KEY")
 
 llm = OpenAI(temperature=0.9)
 
-prompt = PromptTemplate(
-    input_variables=["product"],
-    template="What is a good name for a company that makes {product}?",
-)
-
-prompt.format(product="colorful socks")
-prompt = "What is a good name for a company that makes colorful socks?"
-print(llm(prompt))
-
 class EventAgent():
     
     def say_hello(self):
