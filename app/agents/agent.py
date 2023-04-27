@@ -30,10 +30,7 @@ ANSWER:
 '''
 
 
-class EventAgent():
-
-    def __init__(self):
-        self.model = Pablito() 
+class EventAgent(): 
 
     def say_hello(self, user_input):
         return llm('say hello')
