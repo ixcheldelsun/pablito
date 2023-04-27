@@ -49,7 +49,7 @@ class EventAgent():
     def conversation_chat(self, user_input):
         prompt = self.create_prompt(user_input)
         memory = ConversationBufferMemory()
-        conversation = ConversationChain(llm=llm(prompt), 
+        conversation = ConversationChain(llm=llm, 
                                 verbose=False,
                                 memory=memory)
         
