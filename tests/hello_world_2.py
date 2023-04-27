@@ -5,7 +5,7 @@ from langchain.chains import LLMChain, SequentialChain, ConversationChain
 from langchain.memory import ConversationBufferMemory
 from langchain.utilities import WikipediaAPIWrapper 
 
-OPENAI_API_KEY ='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'
+OPENAI_API_KEY =''
 
 llm = OpenAI(openai_api_key=OPENAI_API_KEY)
 
