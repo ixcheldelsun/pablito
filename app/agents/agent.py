@@ -30,6 +30,7 @@ QUESTION: {}
 ANSWER:
 '''
 
+previous_responses = []
 
 class EventAgent(): 
 
@@ -46,7 +47,7 @@ class EventAgent():
         prompt = self.create_prompt(user_input)
         return llm(prompt)
     
-    def conversation_chat(self, user_input):
+    def _conversation_chat(self, user_input):
         prompt = self.create_prompt(user_input)
         memory = ConversationBufferWindowMemory(prompt=prompt, k=10)
         conversation = ConversationChain(llm=llm(prompt), 
@@ -54,6 +55,28 @@ class EventAgent():
                                 memory=memory)
         
         return conversation.predict(input=user_input)
+    
+    previous_responses = []
+
+    def conversation_chat(self, user_input):
+        prompt = self.create_prompt(user_input)
+        # Concatenar el prompt y las respuestas anteriores
+        full_prompt = prompt + "\n" + "\n".join(previous_responses) + "\n"
+        memory = ConversationBufferWindowMemory(prompt=prompt, k=10)
+        conversation = ConversationChain(llm=llm(prompt), 
+                                verbose=False,
+                                memory=memory)
+
+        # Generar la respuesta de la conversación
+        answer = conversation.predict(full_prompt + user_input)
+
+        # Agregar la respuesta actual a la lista de respuestas anteriores
+        previous_responses.append(user_input + "\n" + answer)
+
+        # Actualizar la memoria de conversación
+        conversation.memory.add(full_prompt + user_input, answer)
+
+        return answer
         
 
 
