@@ -4,7 +4,8 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 from langchain import ConversationChain
-from langchain.memory import ConversationBufferWindowMemory
+from langchain.prompts import PromptTemplate
+from langchain.memory import CombinedMemory, ConversationBufferMemory, ConversationSummaryMemory
 from langchain.llms import OpenAI
 
 
@@ -28,7 +29,6 @@ Answer the following question based on the information above. If the answer is n
 If you don't know the answer, just say that you don't know, don't try to make up an answer. Instead, make suggestions on what they can do to find the answer.
 '''
 
-previous_responses = []
 input_setup = """
 QUESTION: {}
 ANSWER:
@@ -104,33 +104,25 @@ class EventAgent():
 
 
     
-    def _conversation_chat(self, user_input):
-        prompt = self.create_prompt(user_input)
-        memory = ConversationBufferWindowMemory(prompt=prompt, k=10)
-        conversation = ConversationChain(llm=llm(prompt), 
-                                verbose=False,
-                                memory=memory)
-        
-        return conversation.predict(input=user_input)
-
-    previous_responses = []
-
     def conversation_chat(self, user_input):
-        prompt = self.create_prompt(user_input)
-        # Concatenar el prompt y las respuestas anteriores
-        full_prompt = prompt + "\n" + "\n".join(previous_responses) + "\n"
-        memory = ConversationBufferWindowMemory(prompt=prompt, k=10)
-        conversation = ConversationChain(llm=llm(prompt), 
-                                verbose=False,
-                                memory=memory)
-
-        # Generar la respuesta de la conversación
-        answer = conversation.predict(full_prompt + user_input)
-
-        # Agregar la respuesta actual a la lista de respuestas anteriores
-        previous_responses.append(user_input + "\n" + answer)
-
-        # Actualizar la memoria de conversación
-        conversation.memory.add(full_prompt + user_input, answer)
-
-        return answer
+        conv_memory = ConversationBufferMemory(memory_key="chat_history_lines",
+                                               input_key="input"
+                                               )
+        summary_memory = ConversationSummaryMemory(llm=llm, input_key="input")
+        memory = CombinedMemory(memories=[conv_memory, summary_memory])
+        _DEFAULT_TEMPLATE = event_context + """Summary of conversation: {history}
+        Current conversation:
+        {chat_history_lines}
+        Human: {user_input}
+        AI:"""
+        PROMPT = PromptTemplate(
+            input_variables=["history", "input", "chat_history_lines"], template=_DEFAULT_TEMPLATE
+        )
+        conversation = ConversationChain(
+            llm=llm, 
+            verbose=True, 
+            memory=memory,
+            prompt=PROMPT
+        )
+        
+        return conversation.run(user_input)
