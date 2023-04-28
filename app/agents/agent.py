@@ -48,10 +48,34 @@ class EventAgent():
     
 
     def answer_event_FAQs(self, user_input):
-        prompt = self.create_prompt(user_input)
-        print(llm(prompt))
-        return llm(prompt)
 
+        evaluation = self.evaluate_input(user_input)
+        if evaluation:
+            prompt = self.create_prompt(user_input)
+            response = llm(prompt)
+        else:
+            response = "I'm sorry, I don't know this information."
+        print(response)
+        return response
+
+
+    def evaluate_input(self, user_input):
+        pre_context = """
+You are an AI that determines if the user input can be answered without access to the internet and using only the context given in the prompt.
+You will answer "True" if no external information is required.
+You will answer "False" if the user input cannot be answered with the provided context.
+You will not answer anything else. Your goal is to be precise.
+user input: {}
+context: {}
+        """
+        llm = OpenAI(temperature=0)
+        prompt = pre_context.format(user_input, event_context)
+        response = llm(prompt)
+        print('response', response)
+        answer = response == "True"
+        print("answer:", answer)
+
+        return answer
 
     def run_event_agent(self, user_input):
         from langchain.agents import load_tools
@@ -75,6 +99,7 @@ class EventAgent():
 
         # Now let's test it out!
         agent.run(prompt)
+
 
     def run_chat(self, user_input):
         from langchain.prompts import (

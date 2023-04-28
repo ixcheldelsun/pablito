@@ -33,6 +33,7 @@ agent = EventAgent()
 # agent.connect_chatgpt("What is the capital of Romania?")
 # prompt = agent.create_prompt('What is this about?')
 # print(prompt)
+# agent.answer_event_FAQs('Me puedes dar la direccion de Oliva?')
 agent.answer_event_FAQs('Me puedes dar la direccion de Oliva?')
 # agent.run_chat('What is the first event where I need to be?')
 # product = 'colorful socks'
