@@ -14,20 +14,33 @@ from app.agents import event_contexts
 
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-#SERP_API_KEY = os.getenv("SERP_API_KEY")
+SERP_API_KEY = os.getenv("SERP_API_KEY")
 
-llm = OpenAI(temperature=0.8)
+MODEL_TYPE = 'gpt-3.5-turbo'
+
+llm = OpenAI(temperature=0.8, model_name=MODEL_TYPE)
 
 
 event_context = event_contexts.version_1
 
+
+factuality_system_message = """
+Your job is to give answers that are factual and correct. If at any time you are not sure about your your response, instead be honest and say you do not know they answer.
+If you don't know an answer you can give the user suggestions on where the could find the information. Again, if in doubt, say you don't know.
+Finally, you can use your all your acquired knowledge but pay special attention to the event information provided.
+It is very bad manners to respond in a language that is not the same as the language in which the question was made.
+Be very dilligent in providing your answers in the same language as the question.
+"""
+
+
 event_system_messages_no_input = '''
-You are a helpful but conservative coordinator for an event that is very intent on giving people factually correct information. You help people assisting the event or planning the event know where they need to be, what they need to be prepared, what is important to know, and anything that they might require related to the event.
+You are a helpful but conservative coordinator for an event that is very intent on giving people factually correct information. You help people assisting the event or planning the event know where they need to be, what they need to be prepared, what is important to know, and anything that they might require related to the event. You always answer in the same language as the question.
 This is the event information:
 {}
 Answer the following question based on the information above. If the answer is not provided in the information above, give a logical answer without being too specific.
 If you don't know the answer, just say that you don't know, don't try to make up an answer. Instead, make suggestions on what they can do to find the answer.
 '''
+event_system_messages_no_input = factuality_system_message + event_system_messages_no_input
 
 input_setup = """
 QUESTION: {}
@@ -48,11 +61,38 @@ class EventAgent():
         return event_system_messages.format(event_context, user_input)
     
 
-    def answer_event_FAQs(self, user_input):
-        prompt = self.create_prompt(user_input)
-        print(llm(prompt))
-        return llm(prompt)
+    def answer_event_FAQs(self, user_input, **kwargs):
+        evaluation = True
+        if 'evaluate' in kwargs:
+            if kwargs['evaluate']:
+                evaluation = self.evaluate_input(user_input)
 
+        if evaluation:
+            prompt = self.create_prompt(user_input)
+            response = llm(prompt)
+        else:
+            response = "I'm sorry, I don't know this information."
+        print(response)
+        return response
+
+
+    def evaluate_input(self, user_input):
+        pre_context = """
+You are an AI that determines if the user input can be answered without access to the internet. You can only use reasoning using the context given in the prompt.
+You will answer "True" if no external information is required.
+You will answer "False" if the user input cannot be answered with the provided context.
+You will not answer anything else. Your goal is to be precise.
+user input: {}
+context: {}
+        """
+        # llm = OpenAI(temperature=0)
+        prompt = pre_context.format(user_input, event_context)
+        response = llm(prompt)
+        print('response', response)
+        answer = response == "True"
+        print("answer:", answer)
+
+        return answer
 
     def run_event_agent(self, user_input):
         from langchain.agents import load_tools
@@ -76,6 +116,7 @@ class EventAgent():
 
         # Now let's test it out!
         agent.run(prompt)
+
 
     def run_chat(self, user_input):
         from langchain.prompts import (
