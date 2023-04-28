@@ -20,16 +20,6 @@ llm = OpenAI(temperature=0.8)
 
 event_context = event_contexts.version_1
 
-# event_system_messages = '''
-# You are a helpful but conservative coordinator for an event that is very intent on giving people factually correct information. You help people assisting the event or planning the event know where they need to be, what they need to be prepared, what is important to know, and anything that they might require related to the event.
-# This is the event information:
-# {}
-# Answer the following question based on the information above. If the answer is not provided in the information above, give a logical answer without being too specific.
-# If you don't know the answer, just say that you don't know, don't try to make up an answer. Instead, make suggestions on what they can do to find the answer.
-# QUESTION: {}
-# ANSWER:
-# '''
-
 event_system_messages_no_input = '''
 You are a helpful but conservative coordinator for an event that is very intent on giving people factually correct information. You help people assisting the event or planning the event know where they need to be, what they need to be prepared, what is important to know, and anything that they might require related to the event.
 This is the event information:
@@ -37,6 +27,11 @@ This is the event information:
 Answer the following question based on the information above. If the answer is not provided in the information above, give a logical answer without being too specific.
 If you don't know the answer, just say that you don't know, don't try to make up an answer. Instead, make suggestions on what they can do to find the answer.
 '''
+
+input_setup = """
+QUESTION: {}
+ANSWER:
+"""
 
 
 class EventAgent():
@@ -48,16 +43,13 @@ class EventAgent():
         print(llm(user_input))
 
     def create_prompt(self, user_input):
-        event_system_messages = event_system_messages_no_input + """
-        QUESTION: {}
-        ANSWER:
-        """
+        event_system_messages = event_system_messages_no_input + input_setup
         return event_system_messages.format(event_context, user_input)
     
 
     def answer_event_FAQs(self, user_input):
         prompt = self.create_prompt(user_input)
-
+        print(prompt)
         print(llm(prompt))
 
         return llm(prompt)
