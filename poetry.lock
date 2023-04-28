@@ -1131,6 +1131,17 @@ files = [
 ]
 
 [[package]]
+name = "pyunormalize"
+version = "15.0.0"
+description = "Unicode normalization forms (NFC, NFKC, NFD, NFKD). A library independent from the Python core Unicode database."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "pyunormalize-15.0.0.tar.gz", hash = "sha256:e63fdba0d85ea04579dde2fc29a072dba773dcae600b04faf6cc90714c8b1302"},
+]
+
+[[package]]
 name = "pyyaml"
 version = "6.0"
 description = "YAML parser and emitter for Python"
@@ -1520,4 +1531,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "8e84a82c4271a69f7b857b5ab27dbb281d3ac311487d452c4b56b1911ece73a9"
+content-hash = "1b8e6bad1d0a3fcc531ca3b2f3ae61b2d3e4fc76d8f662c552d57eccd0691360"
