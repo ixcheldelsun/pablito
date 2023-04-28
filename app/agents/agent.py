@@ -15,7 +15,7 @@ from app.agents import event_contexts
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 #SERP_API_KEY = os.getenv("SERP_API_KEY")
 
-llm = OpenAI(temperature=0.8)
+llm = OpenAI(temperature=0.8, model_name="text-davinci-003", n=2, best_of=2)
 
 
 event_context = event_contexts.version_1
@@ -47,9 +47,12 @@ class EventAgent():
         return event_system_messages.format(event_context, user_input)
     
 
-    def answer_event_FAQs(self, user_input):
+    def answer_event_FAQs(self, user_input, **kwargs):
+        evaluation = True
+        if 'evaluate' in kwargs:
+            if kwargs['evaluate']:
+                evaluation = self.evaluate_input(user_input)
 
-        evaluation = self.evaluate_input(user_input)
         if evaluation:
             prompt = self.create_prompt(user_input)
             response = llm(prompt)
@@ -61,14 +64,14 @@ class EventAgent():
 
     def evaluate_input(self, user_input):
         pre_context = """
-You are an AI that determines if the user input can be answered without access to the internet and using only the context given in the prompt.
+You are an AI that determines if the user input can be answered without access to the internet. You can only use reasoning using the context given in the prompt.
 You will answer "True" if no external information is required.
 You will answer "False" if the user input cannot be answered with the provided context.
 You will not answer anything else. Your goal is to be precise.
 user input: {}
 context: {}
         """
-        llm = OpenAI(temperature=0)
+        # llm = OpenAI(temperature=0)
         prompt = pre_context.format(user_input, event_context)
         response = llm(prompt)
         print('response', response)

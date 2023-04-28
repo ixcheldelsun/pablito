@@ -34,7 +34,7 @@ agent = EventAgent()
 # prompt = agent.create_prompt('What is this about?')
 # print(prompt)
 # agent.answer_event_FAQs('Me puedes dar la direccion de Oliva?')
-agent.answer_event_FAQs('Me puedes dar la direccion de Oliva?')
+agent.answer_event_FAQs('Cuando es el primer evento?')
 # agent.run_chat('What is the first event where I need to be?')
 # product = 'colorful socks'
 # print(prompt.format(product=product))
