@@ -15,13 +15,15 @@ from app.agents import event_contexts
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 #SERP_API_KEY = os.getenv("SERP_API_KEY")
 
-llm = OpenAI(temperature=0.8, model_name="text-davinci-003", n=2, best_of=2)
+MODEL_TYPE = 'gpt-3.5-turbo'
+
+llm = OpenAI(temperature=0.8, model_name=MODEL_TYPE)
 
 
 event_context = event_contexts.version_1
 
 event_system_messages_no_input = '''
-You are a helpful but conservative coordinator for an event that is very intent on giving people factually correct information. You help people assisting the event or planning the event know where they need to be, what they need to be prepared, what is important to know, and anything that they might require related to the event.
+You are a helpful but conservative coordinator for an event that is very intent on giving people factually correct information. You help people assisting the event or planning the event know where they need to be, what they need to be prepared, what is important to know, and anything that they might require related to the event. You always answer in the same language as the question.
 This is the event information:
 {}
 Answer the following question based on the information above. If the answer is not provided in the information above, give a logical answer without being too specific.
