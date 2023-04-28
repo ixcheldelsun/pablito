@@ -116,7 +116,7 @@ class EventAgent():
         Human: {user_input}
         AI:"""
         PROMPT = PromptTemplate(
-            input_variables=["history", "input", "chat_history_lines"], template=_DEFAULT_TEMPLATE
+            input_variables=["history", "user_input", "chat_history_lines"], template=_DEFAULT_TEMPLATE
         )
         conversation = ConversationChain(
             llm=llm, 
