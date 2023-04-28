@@ -30,6 +30,7 @@ If you don't know an answer you can give the user suggestions on where the could
 Finally, you can use your all your acquired knowledge but pay special attention to the event information provided.
 It is very bad manners to respond in a language that is not the same as the language in which the question was made.
 Be very dilligent in providing your answers in the same language as the question.
+PRECAUCION! Si la pregunta esta hecha en español, debes de contestar en español. Se muy diligente en ser consistente con el idioma en el que se hizo la pregunta.
 """
 
 
@@ -40,6 +41,8 @@ This is the event information:
 Answer the following question based on the information above. If the answer is not provided in the information above, give a logical answer without being too specific.
 If you don't know the answer, just say that you don't know, don't try to make up an answer. Instead, make suggestions on what they can do to find the answer.
 '''
+
+# join factuality clause and event system message
 event_system_messages_no_input = factuality_system_message + event_system_messages_no_input
 
 input_setup = """
