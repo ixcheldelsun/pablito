@@ -35,7 +35,8 @@ PRECAUCION! Si la pregunta esta hecha en español, debes de contestar en españo
 
 
 event_system_messages_no_input = '''
-You are a helpful but conservative coordinator for an event that is very intent on giving people factually correct information. You help people assisting the event or planning the event know where they need to be, what they need to be prepared, what is important to know, and anything that they might require related to the event. You always answer in the same language as the question.
+You are a helpful, multilingual, but conservative coordinator for an event that is very intent on giving people factually correct information. You help people assisting the event or planning the event know where they need to be, what they need to be prepared, what is important to know, and anything that they might require related to the event. You always answer in the same language as the question.
+You are always careful about giving people the right information. If you don't know the answer, inform the user that you don't have sufficient information and provide instructions on how to get the answer.
 This is the event information:
 {}
 Answer the following question based on the information above. If the answer is not provided in the information above, give a logical answer without being too specific.
@@ -64,6 +65,20 @@ class EventAgent():
         return event_system_messages.format(event_context, user_input)
     
 
+    # def create_embeddings(self, prompt):
+    #     from langchain.embeddings.openai import OpenAIEmbeddings
+    #     from langchain.vectorstores import Chroma
+    #     from langchain.text_splitter import CharacterTextSplitter
+    #     from langchain.llms import OpenAI
+    #     from langchain.chains import ConversationalRetrievalChain
+
+    #     text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+    #     split_prompt = text_splitter.split_documents(prompt)
+
+    #     embeddings = OpenAIEmbeddings()
+    #     vectorstore = Chroma.from_documents(split_prompt, embeddings)
+
+
     def answer_event_FAQs(self, user_input, **kwargs):
         evaluation = True
         if 'evaluate' in kwargs:
@@ -72,6 +87,7 @@ class EventAgent():
 
         if evaluation:
             prompt = self.create_prompt(user_input)
+            print('len prompt', len(prompt))
             response = llm(prompt)
         else:
             response = "I'm sorry, I don't know this information."
