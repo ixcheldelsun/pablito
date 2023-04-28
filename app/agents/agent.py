@@ -4,7 +4,8 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 from langchain import ConversationChain
-from langchain.memory import ConversationBufferWindowMemory
+from langchain.prompts import PromptTemplate
+from langchain.memory import CombinedMemory, ConversationBufferMemory, ConversationSummaryMemory
 from langchain.llms import OpenAI
 
 
@@ -134,11 +135,24 @@ context: {}
 
     
     def conversation_chat(self, user_input):
-        prompt = self.create_prompt(user_input)
-        memory = ConversationBufferWindowMemory(prompt=prompt, k=10)
-        conversation = ConversationChain(llm=llm(prompt), 
-                                verbose=False,
-                                memory=memory)
+        conv_memory = ConversationBufferMemory(memory_key="chat_history_lines",
+                                               input_key="input"
+                                               )
+        summary_memory = ConversationSummaryMemory(llm=llm, input_key="input")
+        memory = CombinedMemory(memories=[conv_memory, summary_memory])
+        _DEFAULT_TEMPLATE = event_context + """Summary of conversation: {history}
+        Current conversation:
+        {chat_history_lines}
+        Human: {user_input}
+        AI:"""
+        PROMPT = PromptTemplate(
+            input_variables=["history", "user_input", "chat_history_lines"], template=_DEFAULT_TEMPLATE
+        )
+        conversation = ConversationChain(
+            llm=llm, 
+            verbose=True, 
+            memory=memory,
+            prompt=PROMPT
+        )
         
-        return conversation.predict(input=user_input)
-
+        return conversation.run(user_input)
