@@ -3,6 +3,7 @@ from fastapi import FastAPI, Form
 import uvicorn
 from app.models.chatbot import chatbot
 from config import logger
+from app.db import db
 
 load_dotenv()
 
@@ -19,6 +20,12 @@ def root():
 async def bot(From: str = Form(...), Body: str = Form(...)):
     logger.info(f"Received message from {From}: {Body}")
     return chatbot.run(Body, From)
+
+
+@app.post("/webhook")
+async def webhook(From: str = Form(...), Body: str = Form(...)):
+    logger.info(f"Received message from {From}: {Body}")
+    
 
 
 if __name__ == "__main__":
