@@ -33,7 +33,7 @@ class Chatbot:
         
     
     def run(self, message, sender) -> None:
-        response = self.event_agent.conversation_chat(message)
+        response = self.event_agent.answer_event_FAQs(message)
         try:
             self.send_message(response, sender)
         except Exception as e:
