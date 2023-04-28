@@ -26,14 +26,15 @@
 # print(llm(prompt))
 
 
-from agents.agent import EventAgent
+from app.agents.agent import EventAgent
 
 agent = EventAgent()
 # agent.say_hello()
 # agent.connect_chatgpt("What is the capital of Romania?")
 # prompt = agent.create_prompt('What is this about?')
 # print(prompt)
-agent.answer_event_FAQs('When and where do I need to be?')
+agent.answer_event_FAQs('Me puedes dar la direccion de Oliva?')
+# agent.run_chat('What is the first event where I need to be?')
 # product = 'colorful socks'
 # print(prompt.format(product=product))
 
