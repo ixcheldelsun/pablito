@@ -16,6 +16,10 @@ python-multipart = "^0.0.6"
 openai = "^0.27.5"
 langchain = "^0.0.151"
 pexpect = "^4.8.0"
+motor = "^3.1.2"
+pymongo = "^4.3.3"
+pydantic = "^1.10.7"
+pyunormalize = "^15.0.0"
 
 
 [build-system]
