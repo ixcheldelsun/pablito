@@ -49,9 +49,7 @@ class EventAgent():
 
     def answer_event_FAQs(self, user_input):
         prompt = self.create_prompt(user_input)
-        print(prompt)
         print(llm(prompt))
-
         return llm(prompt)
 
 
